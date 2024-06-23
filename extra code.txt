@@ -45,3 +45,21 @@
                 </div>
               </article>
             </div>
+
+
+
+
+
+
+
+
+
+
+
+copyrightYear: $(".copyright-year")
+
+			maps: $(".google-map-container"),
+			twitterfeed: $(".twitter"),
+
+			search: $(".rd-search"),
+			searchResults: $('.rd-search-results'),
