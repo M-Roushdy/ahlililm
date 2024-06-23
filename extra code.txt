@@ -1,0 +1,47 @@
+            <div class="col-md-6 col-xl-3 wow fadeIn" data-wow-delay=".2s">
+              <!-- Linear progress bar-->
+              <article class="progress-linear">
+                <div class="progress-header">
+                  <p>Accounting</p><span class="progress-value">75</span>
+                </div>
+                <div class="progress-bar-linear-wrap">
+                  <div class="progress-bar-linear"></div>
+                </div>
+              </article>
+              <!-- Linear progress bar-->
+              <article class="progress-linear">
+                <div class="progress-header">
+                  <p>Management</p><span class="progress-value">33</span>
+                </div>
+                <div class="progress-bar-linear-wrap">
+                  <div class="progress-bar-linear"></div>
+                </div>
+              </article>
+              <!-- Linear progress bar-->
+              <article class="progress-linear">
+                <div class="progress-header">
+                  <p>Computer Technology</p><span class="progress-value">88</span>
+                </div>
+                <div class="progress-bar-linear-wrap">
+                  <div class="progress-bar-linear"></div>
+                </div>
+              </article>
+              <!-- Linear progress bar-->
+              <article class="progress-linear">
+                <div class="progress-header">
+                  <p>Medicine</p><span class="progress-value">75</span>
+                </div>
+                <div class="progress-bar-linear-wrap">
+                  <div class="progress-bar-linear"></div>
+                </div>
+              </article>
+              <!-- Linear progress bar-->
+              <article class="progress-linear">
+                <div class="progress-header">
+                  <p>Jurisprudence</p><span class="progress-value">50</span>
+                </div>
+                <div class="progress-bar-linear-wrap">
+                  <div class="progress-bar-linear"></div>
+                </div>
+              </article>
+            </div>
