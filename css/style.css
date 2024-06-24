@@ -1829,7 +1829,7 @@ img {
 
 .table-custom th,
 .table-custom td {
-	color: #404058;
+	color: #000000;
 	background: #ffffff;
 }
 
@@ -5463,7 +5463,7 @@ a.thumbnail-thin {
 }
 
 .product-corporate-meta tr:first-child td {
-	border-top: 1px solid #f6f6f6;
+	border-top: 2px solid #000000;
 }
 
 .product-corporate-meta td {
