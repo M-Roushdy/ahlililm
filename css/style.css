@@ -8226,7 +8226,7 @@ html:not(.lt-ie10) .not-animated {
 	right: 15px;
 	bottom: 15px;
 	z-index: 100;
-	width: 5px;
+	width: 50px;
 	height: 50px;
 	border-radius: 4px;
 	font-size: 20px;
