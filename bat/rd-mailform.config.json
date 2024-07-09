@@ -1,8 +1,8 @@
 {
   "useSmtp": false,
-  "host": "stmp.gmail.com",
+  "host": "smtp.hostinger.com",
   "port": 465,
-  "username": "demo@gmail.com",
-  "password": "demopassword",
-  "recipientEmail": "demo@gmail.com"
+  "username": "info@educationhouselanguageschools.com",
+  "password": "Educationhouselanguageschools@1",
+  "recipientEmail": "info@educationhouselanguageschools.com"
 }
