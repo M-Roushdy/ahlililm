@@ -1,5 +1,5 @@
 {
-  "useSmtp": false,
+  "useSmtp": true,
   "host": "smtp.hostinger.com",
   "port": 465,
   "username": "info@educationhouselanguageschools.com",

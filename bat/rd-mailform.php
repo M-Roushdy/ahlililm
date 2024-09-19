@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+ini_set('log_errors', 1);
+ini_set('error_log', '/path/to/php-error.log'); // Make sure to set the correct path
 
 $formConfigFile = file_get_contents("rd-mailform.config.json");
 $formConfig = json_decode($formConfigFile, true);
@@ -13,13 +18,12 @@ try {
     preg_match_all("/([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)/", $recipients, $addresses, PREG_OFFSET_CAPTURE);
 
     if (!count($addresses[0])) {
-        die('MF001');
+        die('MF001: Invalid recipient email');
     }
 
     function getRemoteIPAddress() {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];
-
         } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
@@ -27,7 +31,7 @@ try {
     }
 
     if (preg_match('/^(127\.|192\.168\.|::1)/', getRemoteIPAddress())) {
-        die('MF002');
+        die('MF002: Localhost IP address detected');
     }
 
     $template = file_get_contents('rd-mailform.tpl');
@@ -47,32 +51,34 @@ try {
                 $subject = 'A message from your site visitor';
                 break;
         }
-    }else{
-        die('MF004');
+    } else {
+        die('MF004: Form type not set');
     }
 
     if (isset($_POST['email'])) {
         $template = str_replace(
             array("<!-- #{FromState} -->", "<!-- #{FromEmail} -->"),
             array("Email:", $_POST['email']),
-            $template);
+            $template
+        );
     }
 
     if (isset($_POST['message'])) {
         $template = str_replace(
             array("<!-- #{MessageState} -->", "<!-- #{MessageDescription} -->"),
             array("Message:", $_POST['message']),
-            $template);
+            $template
+        );
     }
 
-    // In a regular expression, the character \v is used as "anything", since this character is rare
     preg_match("/(<!-- #\{BeginInfo\} -->)([^\v]*?)(<!-- #\{EndInfo\} -->)/", $template, $matches, PREG_OFFSET_CAPTURE);
     foreach ($_POST as $key => $value) {
         if ($key != "counter" && $key != "email" && $key != "message" && $key != "form-type" && $key != "g-recaptcha-response" && !empty($value)){
             $info = str_replace(
                 array("<!-- #{BeginInfo} -->", "<!-- #{InfoState} -->", "<!-- #{InfoDescription} -->"),
                 array("", ucfirst($key) . ':', $value),
-                $matches[0][0]);
+                $matches[0][0]
+            );
 
             $template = str_replace("<!-- #{EndInfo} -->", $info, $template);
         }
@@ -81,52 +87,32 @@ try {
     $template = str_replace(
         array("<!-- #{Subject} -->", "<!-- #{SiteName} -->"),
         array($subject, $_SERVER['SERVER_NAME']),
-        $template);
+        $template
+    );
 
     $mail = new PHPMailer();
 
-
     if ($formConfig['useSmtp']) {
-        //Tell PHPMailer to use SMTP
         $mail->isSMTP();
-
-        //Enable SMTP debugging
-        // 0 = off (for production use)
-        // 1 = client messages
-        // 2 = client and server messages
-        $mail->SMTPDebug = 0;
-
+        $mail->SMTPDebug = 2; // Enable SMTP debugging
         $mail->Debugoutput = 'html';
-
-        // Set the hostname of the mail server
         $mail->Host = $formConfig['host'];
-
-        // Set the SMTP port number - likely to be 25, 465 or 587
         $mail->Port = $formConfig['port'];
-
-        // Whether to use SMTP authentication
         $mail->SMTPAuth = true;
         $mail->SMTPSecure = "ssl";
-
-        // Username to use for SMTP authentication
         $mail->Username = $formConfig['username'];
-
-        // Password to use for SMTP authentication
         $mail->Password = $formConfig['password'];
     }
 
     $mail->From = $_POST['email'];
 
-    # Attach file
-    if (isset($_FILES['file']) &&
-        $_FILES['file']['error'] == UPLOAD_ERR_OK) {
-        $mail->AddAttachment($_FILES['file']['tmp_name'],
-            $_FILES['file']['name']);
+    if (isset($_FILES['file']) && $_FILES['file']['error'] == UPLOAD_ERR_OK) {
+        $mail->AddAttachment($_FILES['file']['tmp_name'], $_FILES['file']['name']);
     }
 
-    if (isset($_POST['name'])){
+    if (isset($_POST['name'])) {
         $mail->FromName = $_POST['name'];
-    }else{
+    } else {
         $mail->FromName = "Site Visitor";
     }
 
@@ -137,11 +123,17 @@ try {
     $mail->CharSet = 'utf-8';
     $mail->Subject = $subject;
     $mail->MsgHTML($template);
-    $mail->send();
 
-    die('MF000');
+    if (!$mail->send()) {
+        error_log('Mail sending failed: ' . $mail->ErrorInfo); // Log the error
+        die('MF255: Mail sending failed. ' . $mail->ErrorInfo);
+    }
+
+    die('MF000: Success');
 } catch (phpmailerException $e) {
-    die('MF254');
+    error_log('PHPMailer exception: ' . $e->getMessage()); // Log the exception
+    die('MF254: PHPMailer exception. ' . $e->getMessage());
 } catch (Exception $e) {
-    die('MF255');
+    error_log('General exception: ' . $e->getMessage()); // Log the exception
+    die('MF255: General exception. ' . $e->getMessage());
 }
