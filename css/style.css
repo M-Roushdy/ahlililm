@@ -4520,7 +4520,6 @@ a.thumbnail-thin {
 		transition: .22s ease-in;
 	}
 	html:not(.tablet):not(.mobile) .thumbnail-thin::before {
-		background: rgba(255, 178, 98, 0.8);
 		transform: scale(0.97, 0.97);
 	}
 	html:not(.tablet):not(.mobile) .thumbnail-thin:hover::before, html:not(.tablet):not(.mobile) .thumbnail-thin:hover::after {
